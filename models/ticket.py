@@ -1,47 +1,71 @@
-from dataclasses import dataclass, field
+from sqlalchemy import Column, Integer, String, Text, ForeignKey
+from sqlalchemy.orm import relationship
 from datetime import datetime
-from typing import Optional
+from models.base import Base
 
 
-@dataclass
-class Ticket:
-    """Representa un ticket de servicio técnico."""
-    id: int
-    cliente_id: int
-    servicio_id: int
-    equipo_id: int
-    empleado_id: int
-    incidente_id: int
-    estado: str = "Abierto"
-    fecha_creacion: Optional[str] = None
-    fecha_cierre: Optional[str] = None
+class Ticket(Base):
+    """Modelo de Ticket con SQLAlchemy - Relación 1:N con Incidentes."""
+    __tablename__ = 'tickets'
     
-    def __post_init__(self):
-        """Inicializa la fecha de creación si no se proporciona."""
-        if self.fecha_creacion is None:
-            self.fecha_creacion = datetime.now().isoformat()
+    # Columnas
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    cliente_id = Column(Integer, nullable=False)
+    servicio_id = Column(Integer, nullable=False)
+    equipo_id = Column(Integer, nullable=False)
+    empleado_id = Column(Integer, nullable=False)
+    estado = Column(String(50), nullable=False, default="Abierto")
+    fecha_creacion = Column(String(50), nullable=False)
+    fecha_cierre = Column(String(50), nullable=True)
     
-    def cerrar(self) -> None:
+    # Relación 1:N - Un ticket tiene muchos incidentes
+    incidentes = relationship(
+        "Incidente",
+        back_populates="ticket",
+        cascade="all, delete-orphan",
+        lazy="joined"
+    )
+    
+    def __init__(self, cliente_id, servicio_id, equipo_id, empleado_id, estado="Abierto"):
+        self.cliente_id = cliente_id
+        self.servicio_id = servicio_id
+        self.equipo_id = equipo_id
+        self.empleado_id = empleado_id
+        self.estado = estado
+        self.fecha_creacion = datetime.now().isoformat()
+        self.fecha_cierre = None
+    
+    def cerrar(self):
         """Cierra el ticket."""
         self.estado = "Cerrado"
         self.fecha_cierre = datetime.now().isoformat()
     
-    def reabrir(self) -> None:
+    def reabrir(self):
         """Reabre un ticket cerrado."""
         if self.estado == "Cerrado":
             self.estado = "Reabierto"
             self.fecha_cierre = None
     
-    def to_dict(self) -> dict:
-        """Convierte el ticket a diccionario para serialización."""
-        return {
+    def to_dict(self, incluir_incidentes=False):
+        """Convierte el ticket a diccionario."""
+        data = {
             "id": self.id,
             "cliente_id": self.cliente_id,
             "servicio_id": self.servicio_id,
             "equipo_id": self.equipo_id,
             "empleado_id": self.empleado_id,
-            "incidente_id": self.incidente_id,
             "estado": self.estado,
             "fecha_creacion": self.fecha_creacion,
             "fecha_cierre": self.fecha_cierre,
         }
+        
+        if incluir_incidentes:
+            data["incidentes"] = [inc.to_dict() for inc in self.incidentes]
+        else:
+            data["cantidad_incidentes"] = len(self.incidentes)
+        
+        return data
+    
+    def __repr__(self):
+        return f"<Ticket(id={self.id}, estado='{self.estado}', incidentes={len(self.incidentes)})>"
+

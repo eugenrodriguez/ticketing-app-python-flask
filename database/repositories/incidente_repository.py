@@ -1,109 +1,53 @@
 from typing import Optional, List
-from database.db import get_connection
+from sqlalchemy.orm import Session
 from models.incidente import Incidente
+from database.db import get_session
 
 
 class IncidenteRepository:
-    """Encapsula la lógica de acceso a datos para incidentes."""
+    """Repositorio para operaciones CRUD de Incidentes con SQLAlchemy."""
     
-    def __init__(self, db_path: str = "app.db"):
-        self.conn = get_connection(db_path)
+    def __init__(self):
+        self.session: Session = get_session()
     
-    def crear(self, incidente: Incidente) -> int:
-        """Inserta un incidente en la base de datos."""
-        cursor = self.conn.cursor()
-        cursor.execute(
-            """
-            INSERT INTO incidentes (descripcion, categoria, prioridad)
-            VALUES (?, ?, ?)
-            """,
-            (incidente.descripcion, incidente.categoria, incidente.prioridad),
-        )
-        self.conn.commit()
-        return cursor.lastrowid
+    def crear(self, incidente: Incidente) -> Incidente:
+        """Crea un nuevo incidente en la base de datos."""
+        self.session.add(incidente)
+        self.session.commit()
+        self.session.refresh(incidente)
+        return incidente
     
     def obtener_por_id(self, incidente_id: int) -> Optional[Incidente]:
         """Obtiene un incidente por su ID."""
-        cursor = self.conn.cursor()
-        cursor.execute(
-            """
-            SELECT id, descripcion, categoria, prioridad
-            FROM incidentes WHERE id = ?
-            """,
-            (incidente_id,),
-        )
-        row = cursor.fetchone()
-        if row:
-            return Incidente(
-                id=row[0],
-                descripcion=row[1],
-                categoria=row[2],
-                prioridad=row[3],
-            )
-        return None
+        return self.session.query(Incidente).filter(Incidente.id == incidente_id).first()
     
     def listar_todos(self) -> List[Incidente]:
-        """Obtiene todos los incidentes."""
-        cursor = self.conn.cursor()
-        cursor.execute(
-            "SELECT id, descripcion, categoria, prioridad FROM incidentes ORDER BY id ASC"
-        )
-        rows = cursor.fetchall()
-        return [
-            Incidente(
-                id=row[0],
-                descripcion=row[1],
-                categoria=row[2],
-                prioridad=row[3],
-            )
-            for row in rows
-        ]
+        """Lista todos los incidentes."""
+        return self.session.query(Incidente).order_by(Incidente.id).all()
+    
+    def listar_por_ticket(self, ticket_id: int) -> List[Incidente]:
+        """Lista todos los incidentes de un ticket específico."""
+        return self.session.query(Incidente).filter(Incidente.ticket_id == ticket_id).all()
     
     def eliminar(self, incidente_id: int) -> bool:
         """Elimina un incidente por su ID."""
-        cursor = self.conn.cursor()
-        cursor.execute("DELETE FROM incidentes WHERE id = ?", (incidente_id,))
-        self.conn.commit()
-        return cursor.rowcount > 0
+        incidente = self.obtener_por_id(incidente_id)
+        if incidente:
+            self.session.delete(incidente)
+            self.session.commit()
+            return True
+        return False
     
     def filtrar_por_categoria(self, categoria: str) -> List[Incidente]:
         """Filtra incidentes por categoría."""
-        cursor = self.conn.cursor()
-        cursor.execute(
-            """
-            SELECT id, descripcion, categoria, prioridad
-            FROM incidentes WHERE categoria = ?
-            """,
-            (categoria,),
-        )
-        rows = cursor.fetchall()
-        return [
-            Incidente(
-                id=row[0],
-                descripcion=row[1],
-                categoria=row[2],
-                prioridad=row[3],
-            )
-            for row in rows
-        ]
+        return self.session.query(Incidente).filter(Incidente.categoria == categoria).all()
     
     def filtrar_por_prioridad(self, prioridad: str) -> List[Incidente]:
         """Filtra incidentes por prioridad."""
-        cursor = self.conn.cursor()
-        cursor.execute(
-            """
-            SELECT id, descripcion, categoria, prioridad
-            FROM incidentes WHERE prioridad = ?
-            """,
-            (prioridad,),
-        )
-        rows = cursor.fetchall()
-        return [
-            Incidente(
-                id=row[0],
-                descripcion=row[1],
-                categoria=row[2],
-                prioridad=row[3],
-            )
-            for row in rows
-        ]
+        return self.session.query(Incidente).filter(Incidente.prioridad == prioridad).all()
+    
+    def actualizar(self, incidente: Incidente) -> Incidente:
+        """Actualiza un incidente existente."""
+        self.session.commit()
+        self.session.refresh(incidente)
+        return incidente

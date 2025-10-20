@@ -6,16 +6,17 @@ from models.incidente import Incidente
 class IncidenteController:
     """Controlador de lógica de negocio para incidentes."""
     
-    def __init__(self, db_path: str = "app.db"):
-        self.repo = IncidenteRepository(db_path)
+    def __init__(self):
+        self.repo = IncidenteRepository()
     
     def crear_incidente(
         self,
         descripcion: str,
         categoria: str,
         prioridad: str,
+        ticket_id: int,
     ) -> Dict[str, Any]:
-        """Crea un nuevo incidente."""
+        """Crea un nuevo incidente asociado a un ticket."""
         categorias_validas = ["Hardware", "Software", "Red", "Otro"]
         prioridades_validas = ["Baja", "Media", "Alta", "Crítica"]
         
@@ -32,16 +33,19 @@ class IncidenteController:
             }
         
         incidente = Incidente(
-            id=0,  # Se asignará en BD
             descripcion=descripcion,
             categoria=categoria,
             prioridad=prioridad,
+            ticket_id=ticket_id,
         )
-        incidente_id = self.repo.crear(incidente)
+        
+        incidente_guardado = self.repo.crear(incidente)
+        
         return {
             "exito": True,
-            "id": incidente_id,
+            "id": incidente_guardado.id,
             "mensaje": "Incidente creado exitosamente",
+            "ticket_id": incidente_guardado.ticket_id,
         }
     
     def obtener_incidente(self, incidente_id: int) -> Optional[Dict[str, Any]]:
@@ -54,6 +58,11 @@ class IncidenteController:
     def listar_incidentes(self) -> List[Dict[str, Any]]:
         """Lista todos los incidentes."""
         incidentes = self.repo.listar_todos()
+        return [incidente.to_dict() for incidente in incidentes]
+    
+    def listar_incidentes_por_ticket(self, ticket_id: int) -> List[Dict[str, Any]]:
+        """Lista todos los incidentes de un ticket específico."""
+        incidentes = self.repo.listar_por_ticket(ticket_id)
         return [incidente.to_dict() for incidente in incidentes]
     
     def eliminar_incidente(self, incidente_id: int) -> Dict[str, Any]:

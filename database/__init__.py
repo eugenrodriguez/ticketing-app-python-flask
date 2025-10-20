@@ -1,3 +1,5 @@
-from .db import get_connection, close_connection
+# database/__init__.py - NUEVO para SQLAlchemy
 
-__all__ = ["get_connection", "close_connection"]
+from .db import init_db, get_session, close_session, close_db
+
+__all__ = ["init_db", "get_session", "close_session", "close_db"]

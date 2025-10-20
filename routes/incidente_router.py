@@ -15,21 +15,28 @@ def listar_incidentes():
     responses:
       200:
         description: Lista de incidentes obtenida exitosamente
-        schema:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-              descripcion:
-                type: string
-              categoria:
-                type: string
-              prioridad:
-                type: string
     """
     incidentes = controller.listar_incidentes()
+    return jsonify({"exito": True, "datos": incidentes}), 200
+
+
+@incidente_bp.route("/ticket/<int:ticket_id>", methods=["GET"])
+def listar_incidentes_por_ticket(ticket_id):
+    """
+    Obtiene todos los incidentes de un ticket específico.
+    ---
+    tags:
+      - Incidentes
+    parameters:
+      - name: ticket_id
+        in: path
+        type: integer
+        required: true
+    responses:
+      200:
+        description: Incidentes del ticket
+    """
+    incidentes = controller.listar_incidentes_por_ticket(ticket_id)
     return jsonify({"exito": True, "datos": incidentes}), 200
 
 
@@ -45,21 +52,9 @@ def obtener_incidente(incidente_id):
         in: path
         type: integer
         required: true
-        description: ID del incidente
     responses:
       200:
         description: Incidente encontrado
-        schema:
-          type: object
-          properties:
-            id:
-              type: integer
-            descripcion:
-              type: string
-            categoria:
-              type: string
-            prioridad:
-              type: string
       404:
         description: Incidente no encontrado
     """
@@ -72,7 +67,7 @@ def obtener_incidente(incidente_id):
 @incidente_bp.route("", methods=["POST"])
 def crear_incidente():
     """
-    Crea un nuevo incidente.
+    Crea un nuevo incidente asociado a un ticket.
     ---
     tags:
       - Incidentes
@@ -89,39 +84,33 @@ def crear_incidente():
             categoria:
               type: string
               enum: ["Hardware", "Software", "Red", "Otro"]
-              example: "Hardware"
             prioridad:
               type: string
               enum: ["Baja", "Media", "Alta", "Crítica"]
-              example: "Alta"
+            ticket_id:
+              type: integer
+              example: 1
           required:
             - descripcion
             - categoria
             - prioridad
+            - ticket_id
     responses:
       201:
         description: Incidente creado exitosamente
-        schema:
-          type: object
-          properties:
-            exito:
-              type: boolean
-            id:
-              type: integer
-            mensaje:
-              type: string
       400:
         description: Parámetros inválidos
     """
     datos = request.get_json()
     
-    if not datos or not all(k in datos for k in ["descripcion", "categoria", "prioridad"]):
+    if not datos or not all(k in datos for k in ["descripcion", "categoria", "prioridad", "ticket_id"]):
         return jsonify({"exito": False, "mensaje": "Faltan parámetros requeridos"}), 400
     
     resultado = controller.crear_incidente(
         descripcion=datos["descripcion"],
         categoria=datos["categoria"],
         prioridad=datos["prioridad"],
+        ticket_id=datos["ticket_id"],
     )
     
     if resultado["exito"]:
@@ -141,7 +130,6 @@ def eliminar_incidente(incidente_id):
         in: path
         type: integer
         required: true
-        description: ID del incidente a eliminar
     responses:
       200:
         description: Incidente eliminado exitosamente
@@ -167,14 +155,9 @@ def filtrar_por_categoria():
         type: string
         required: true
         enum: ["Hardware", "Software", "Red", "Otro"]
-        description: Categoría del incidente
     responses:
       200:
         description: Incidentes filtrados exitosamente
-        schema:
-          type: array
-          items:
-            type: object
     """
     categoria = request.args.get("categoria")
     if not categoria:
@@ -197,14 +180,9 @@ def filtrar_por_prioridad():
         type: string
         required: true
         enum: ["Baja", "Media", "Alta", "Crítica"]
-        description: Prioridad del incidente
     responses:
       200:
         description: Incidentes filtrados exitosamente
-        schema:
-          type: array
-          items:
-            type: object
     """
     prioridad = request.args.get("prioridad")
     if not prioridad:

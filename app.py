@@ -1,40 +1,44 @@
 """
-Ticketing API - Aplicación principal
-Sistema de gestión de tickets para reparaciones
+Ticketing API - Aplicación principal con SQLAlchemy
+Sistema de gestión de tickets para reparaciones con relación 1:N
 """
 
 from flask import Flask, jsonify
 from flasgger import Swagger
 from routes.incidente_router import incidente_bp
 from routes.ticket_router import ticket_bp
-from database.db import close_connection
+from database.db import init_db, close_session, close_db
 
 
 def create_app() -> Flask:
-    """Crea e inicializa la aplicación Flask."""
+    """Crea e inicializa la aplicación Flask con SQLAlchemy."""
     app = Flask(__name__)
+    
+    # Inicializar base de datos con SQLAlchemy
+    with app.app_context():
+        init_db()
     
     # Configuración de Swagger/Flasgger
     app.config["SWAGGER"] = {
         "title": "Ticketing API",
         "uiversion": 3,
-        "version": "1.0.0",
+        "version": "2.0.0",
     }
     
     swagger = Swagger(app, template={
         "info": {
-            "title": "Sistema de Ticketing",
-            "description": "API para gestión de tickets de servicio técnico",
-            "version": "1.0.0",
+            "title": "Sistema de Ticketing con SQLAlchemy",
+            "description": "API REST para gestión de tickets con relación 1:N (Ticket → Incidentes)",
+            "version": "2.0.0",
         },
         "tags": [
             {
                 "name": "Tickets",
-                "description": "Operaciones relacionadas con tickets",
+                "description": "Operaciones relacionadas con tickets (1:N con incidentes)",
             },
             {
                 "name": "Incidentes",
-                "description": "Operaciones relacionadas con incidentes",
+                "description": "Operaciones relacionadas con incidentes (N:1 con ticket)",
             },
         ],
     })
@@ -48,8 +52,10 @@ def create_app() -> Flask:
     def root():
         """Endpoint raíz de la API."""
         return jsonify({
-            "nombre": "Ticketing API",
-            "version": "1.0.0",
+            "nombre": "Ticketing API con SQLAlchemy",
+            "version": "2.0.0",
+            "orm": "SQLAlchemy",
+            "relacion": "1 Ticket → N Incidentes",
             "documentacion": "/apidocs",
             "endpoints": {
                 "incidentes": "/incidentes",
@@ -63,6 +69,7 @@ def create_app() -> Flask:
         return jsonify({
             "status": "healthy",
             "mensaje": "La API está funcionando correctamente",
+            "database": "SQLite con SQLAlchemy ORM",
         }), 200
     
     # Manejador de errores global
@@ -80,13 +87,14 @@ def create_app() -> Flask:
         return jsonify({
             "exito": False,
             "mensaje": "Error interno del servidor",
+            "detalle": str(error),
         }), 500
     
     # Cleanup al cerrar
     @app.teardown_appcontext
     def cleanup(exception=None):
-        """Cierra conexiones al finalizar la app."""
-        close_connection()
+        """Cierra sesiones de SQLAlchemy al finalizar."""
+        close_session()
     
     return app
 
@@ -97,13 +105,21 @@ app = create_app()
 
 if __name__ == "__main__":
     # Ejecutar servidor de desarrollo
-    print("Iniciando Ticketing API en http://127.0.0.1:8000")
-    print("Documentación en http://127.0.0.1:8000/apidocs")
-    print("Health check en http://127.0.0.1:8000/health")
+    print("=" * 60)
+    print(" Iniciando Ticketing API con SQLAlchemy")
+    print("=" * 60)
+    print(" URL: http://127.0.0.1:8000")
+    print(" Swagger: http://127.0.0.1:8000/apidocs")
+    print("  Health: http://127.0.0.1:8000/health")
+    print(" Relación: 1 Ticket → N Incidentes")
+    print("=" * 60)
     
-    app.run(
-        host="127.0.0.1",
-        port=8000,
-        debug=True,
-        use_reloader=True,
-    )
+    try:
+        app.run(
+            host="127.0.0.1",
+            port=8000,
+            debug=True,
+            use_reloader=True,
+        )
+    finally:
+        close_db()
