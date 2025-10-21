@@ -1,7 +1,7 @@
 from DataBase.db import Sesion
 from DataBase.Ticket import Ticket
 
-class TicketModel:
+class TicketRepository:
     def __init__(self):
         self.sesion = Sesion()
         

@@ -1,7 +1,7 @@
 from DataBase.db import Sesion
 from DataBase.Incidente import Incidente
 
-class IncidenteModel:
+class IncidenteRepository:
     def __init__(self):
         self.sesion = Sesion()
         

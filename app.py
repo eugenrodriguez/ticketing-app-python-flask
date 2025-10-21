@@ -6,8 +6,8 @@ from DataBase.db import base, engine
 from flasgger import Swagger#, swag_from
 #from flask import render_template
 
-from Models.IncidentModel import IncidenteModel
-from Models.TicketModel import TicketModel
+from Models.IncidenteRepository import IncidenteRepository
+from Models.TicketRepository import TicketRepository
 from Controllers.TicketController import TicketController
 from Controllers.IncidenteController import IncidenteController
 
@@ -19,8 +19,8 @@ swagger_ticket = Swagger(app, template_file='swagger_master.yml')
 with app.app_context():
     base.metadata.create_all(engine)
     
-ticket_model = TicketModel()
-incidente_model = IncidenteModel()
+ticket_model = TicketRepository()
+incidente_model = IncidenteRepository()
 
 controller = TicketController(app, ticket_model)
 incidente_controller = IncidenteController(app, incidente_model)
