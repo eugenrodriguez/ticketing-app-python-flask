@@ -3,8 +3,7 @@
  
 from flask import Flask
 from DataBase.db import base, engine
-from flasgger import Swagger#, swag_from
-#from flask import render_template
+from flasgger import Swagger
 
 from Repository.IncidenteRepository import IncidenteRepository
 from Repository.TicketRepository import TicketRepository
