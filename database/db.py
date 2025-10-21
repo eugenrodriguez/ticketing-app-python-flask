@@ -40,71 +40,8 @@ def init_db(db_path: str = "app.db") -> None:
     # Crear todas las tablas
     Base.metadata.create_all(_engine)
     
-    # Crear tablas hardcodeadas (clientes, empleados, etc.)
-    _crear_tablas_auxiliares()
-    
+    # Crear tablas hardcodeadas (clientes, empleados, etc.)    
     print("Base de datos inicializada con SQLAlchemy")
-
-
-def _crear_tablas_auxiliares() -> None:
-    """Crea tablas auxiliares que no son modelos SQLAlchemy (hardcodeadas)."""
-    from sqlalchemy import text
-    
-    with _engine.connect() as conn:
-        # Tabla clientes
-        conn.execute(text("""
-            CREATE TABLE IF NOT EXISTS clientes (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nombre TEXT NOT NULL,
-                email TEXT NOT NULL,
-                telefono TEXT NOT NULL,
-                direccion TEXT NOT NULL
-            )
-        """))
-        
-        # Tabla empleados
-        conn.execute(text("""
-            CREATE TABLE IF NOT EXISTS empleados (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nombre TEXT NOT NULL,
-                categoria TEXT NOT NULL,
-                rol TEXT NOT NULL
-            )
-        """))
-        
-        # Tabla equipos
-        conn.execute(text("""
-            CREATE TABLE IF NOT EXISTS equipos (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                descripcion TEXT NOT NULL,
-                categoria TEXT NOT NULL,
-                marca TEXT NOT NULL,
-                modelo TEXT NOT NULL,
-                nro_serie TEXT NOT NULL
-            )
-        """))
-        
-        # Tabla servicios
-        conn.execute(text("""
-            CREATE TABLE IF NOT EXISTS servicios (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nombre TEXT NOT NULL
-            )
-        """))
-        
-        # Tabla trabajos (mensajes)
-        conn.execute(text("""
-            CREATE TABLE IF NOT EXISTS trabajos (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ticket_id INTEGER NOT NULL,
-                autor TEXT NOT NULL,
-                contenido TEXT NOT NULL,
-                fecha TEXT NOT NULL,
-                FOREIGN KEY (ticket_id) REFERENCES tickets(id)
-            )
-        """))
-        
-        conn.commit()
 
 
 def get_session():
