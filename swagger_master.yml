@@ -1,0 +1,227 @@
+swagger: "2.0"
+info:
+  title: API de Tickets e Incidentes
+  description: Endpoints para gestionar tickets y sus incidentes asociados.
+  version: "1.0"
+host: "127.0.0.1:5000"
+basePath: "/"
+schemes:
+  - "http"
+
+paths:
+  # Rutas de Incidentes
+  /incidente/crear/{num_ticket}/{tipo}/{descripcion}:
+    get:
+      summary: Crear un nuevo incidente
+      parameters:
+        - name: num_ticket
+          in: path
+          required: true
+          type: integer
+        - name: tipo
+          in: path
+          required: true
+          type: string
+        - name: descripcion
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Incidente creado correctamente
+
+  /incidente/listar:
+    get:
+      summary: Listar todos los incidentes
+      responses:
+        200:
+          description: Lista de incidentes
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Incidente"
+
+  /incidente/buscar/{id}:
+    get:
+      summary: Buscar un incidente por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Incidente encontrado
+          schema:
+            $ref: "#/definitions/Incidente"
+        404:
+          description: Incidente no encontrado
+
+  /incidente/modificar/{id}/{tipo}/{descripcion}:
+    get:
+      summary: Modificar un incidente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - name: tipo
+          in: path
+          required: true
+          type: string
+        - name: descripcion
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Incidente modificado correctamente
+        404:
+          description: Incidente no encontrado
+
+  /incidente/borrar/{id}:
+    get:
+      summary: Eliminar un incidente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Incidente eliminado correctamente
+        
+  # Rutas de Tickets
+  /ticket/crear/{cliente}/{operador}/{equipo}:
+    get:
+      summary: Crear un nuevo ticket
+      parameters:
+        - name: cliente
+          in: path
+          required: true
+          type: string
+        - name: operador
+          in: path
+          required: true
+          type: string
+        - name: equipo
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Ticket creado correctamente
+
+  /ticket/listar:
+    get:
+      summary: Listar todos los tickets
+      responses:
+        200:
+          description: Lista de tickets
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Ticket"
+
+  /ticket/buscar/{id}:
+    get:
+      summary: Buscar un ticket por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Ticket encontrado
+          schema:
+            $ref: "#/definitions/Ticket"
+        404:
+          description: Ticket no encontrado
+
+  /ticket/modificar/{id}/{cliente}/{operador}/{equipo}/{mensaje}/{estado}:
+    get:
+      summary: Modificar un ticket existente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - name: cliente
+          in: path
+          required: true
+          type: string
+        - name: operador
+          in: path
+          required: true
+          type: string
+        - name: equipo
+          in: path
+          required: true
+          type: string
+        - name: mensaje
+          in: path
+          required: true
+          type: string
+        - name: estado
+          in: path
+          required: true
+          type: boolean
+      responses:
+        200:
+          description: Ticket modificado correctamente
+        404:
+          description: Ticket no encontrado
+
+  /ticket/borrar/{id}:
+    get:
+      summary: Eliminar un ticket
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Ticket eliminado correctamente
+
+definitions:
+  # Definición del modelo Incidente
+  Incidente:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      id_ticket:
+        type: integer
+        example: 4
+      tipo:
+        type: string
+        example: "Falla eléctrica"
+      descripcion:
+        type: string
+        example: "El equipo no responde al encendido"
+        
+  # Definición del modelo Ticket
+  Ticket:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      cliente:
+        type: string
+        example: "Juan Perez"
+      operador:
+        type: string
+        example: "Maria Lopez"
+      equipo:
+        type: string
+        example: "Lavarropas"
+      mensaje:
+        type: string
+        example: "El equipo no enciende"
+      estado:
+        type: boolean
+        example: false
