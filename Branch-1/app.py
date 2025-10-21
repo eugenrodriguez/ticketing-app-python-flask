@@ -6,8 +6,8 @@ from DataBase.db import base, engine
 from flasgger import Swagger#, swag_from
 #from flask import render_template
 
-from Models.IncidenteRepository import IncidenteRepository
-from Models.TicketRepository import TicketRepository
+from Repository.IncidenteRepository import IncidenteRepository
+from Repository.TicketRepository import TicketRepository
 from Controllers.TicketController import TicketController
 from Controllers.IncidenteController import IncidenteController
 
