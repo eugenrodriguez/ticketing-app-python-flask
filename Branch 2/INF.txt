@@ -1,0 +1,8 @@
+Término en el Código,Concepto,Explicación
+Vértice (V),Ciudad/Punto,Es cada uno de los nodos o puntos en tu red.
+Arista (E),Carretera/Conexión,Es la conexión entre dos vértices. Tiene un peso.
+Peso,Distancia/Costo,"El valor asociado a una arista (ej. 7, 2, 1). El algoritmo busca minimizar la suma de estos pesos."
+ady[MAX],Lista de Adyacencia,"La forma en que el código almacena el mapa: para cada ciudad, guarda una lista de sus ciudades vecinas y la distancia hasta ellas."
+distancia[MAX],Distancias,Almacena la distancia total más corta encontrada hasta ahora desde el punto inicial a cada vértice.
+INF,Infinito,"Un número muy grande que se usa como distancia inicial para todos los puntos, asumiendo que aún no conocemos la ruta."
+Cola de Prioridad (Q),La Herramienta de Búsqueda,Es una lista especial que siempre mantiene en el tope (el primero) el vértice al que hemos encontrado la ruta más corta provisional y que aún no hemos explorado.
