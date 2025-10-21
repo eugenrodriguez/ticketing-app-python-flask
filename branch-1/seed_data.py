@@ -185,8 +185,6 @@ def main():
         print("   - 3 servicios hardcodeados")
         print("   - 3 tickets con SQLAlchemy")
         print("   - 6 incidentes con SQLAlchemy (relación 1:N)")
-        print("\n Ahora ejecuta: python app.py")
-        print(" Luego accede a: http://localhost:8000/apidocs")
         print("=" * 60)
         
     except Exception as e:

@@ -52,7 +52,7 @@ class DijkstraApp(tk.Tk):
         
         tk.Label(
             frame_titulo,
-            text="🔍 Algoritmo de Dijkstra - Caminos Más Cortos",
+            text=" Algoritmo de Dijkstra - Caminos Más Cortos",
             font=("Arial", 18, "bold"),
             bg="#2c3e50",
             fg="white",
@@ -76,7 +76,7 @@ class DijkstraApp(tk.Tk):
         """Panel izquierdo: configuración del grafo."""
         frame_config = ttk.LabelFrame(
             parent,
-            text="⚙️ Configuración del Grafo",
+            text="Configuración del Grafo",
             padding=10
         )
         frame_config.grid(row=0, column=0, sticky="nsew", padx=(0, 5))
@@ -143,13 +143,13 @@ class DijkstraApp(tk.Tk):
         
         ttk.Button(
             frame_config,
-            text="🚀 Ejecutar Dijkstra",
+            text="Ejecutar Dijkstra",
             command=self.ejecutar_dijkstra,
             style="Accent.TButton"
         ).grid(row=10, column=0, columnspan=2, pady=10)
         
         # Log de acciones
-        ttk.Label(frame_config, text="📝 Log de Acciones:").grid(
+        ttk.Label(frame_config, text="Log de Acciones:").grid(
             row=11, column=0, columnspan=3, sticky=tk.W, pady=(10, 5)
         )
         
@@ -166,7 +166,7 @@ class DijkstraApp(tk.Tk):
         """Panel derecho: resultados de Dijkstra."""
         frame_resultados = ttk.LabelFrame(
             parent,
-            text="📊 Resultados - Distancias y Caminos",
+            text="Resultados - Distancias y Caminos",
             padding=10
         )
         frame_resultados.grid(row=0, column=1, sticky="nsew", padx=(5, 0))
@@ -202,21 +202,21 @@ class DijkstraApp(tk.Tk):
         
         ttk.Button(
             frame_acciones,
-            text="📝 Cargar Grafo de Ejemplo",
+            text="Cargar Grafo de Ejemplo",
             command=self.cargar_grafo_ejemplo,
             width=25
         ).pack(side=tk.LEFT, padx=10, pady=10)
         
         ttk.Button(
             frame_acciones,
-            text="🧹 Limpiar Todo",
+            text="Limpiar Todo",
             command=self.limpiar_todo,
             width=20
         ).pack(side=tk.LEFT, padx=10, pady=10)
         
         ttk.Button(
             frame_acciones,
-            text="❌ Salir",
+            text="Salir",
             command=self.quit,
             width=15
         ).pack(side=tk.RIGHT, padx=10, pady=10)
@@ -238,7 +238,7 @@ class DijkstraApp(tk.Tk):
                 raise ValueError
             
             self.dijkstra.inicializar(num_vertices)
-            self.log(f"✅ Grafo inicializado con {num_vertices} vértices")
+            self.log(f"Grafo inicializado con {num_vertices} vértices")
             self.tree.delete(*self.tree.get_children())
             
         except ValueError:
@@ -261,7 +261,7 @@ class DijkstraApp(tk.Tk):
             self.dijkstra.agregar_arista(origen, destino, peso, dirigida)
             
             tipo = "dirigida" if dirigida else "bidireccional"
-            self.log(f"✅ Arista agregada: {origen} → {destino} (peso: {peso}, {tipo})")
+            self.log(f"Arista agregada: {origen} → {destino} (peso: {peso}, {tipo})")
             
             # Limpiar campos
             self.entry_origen.delete(0, tk.END)
@@ -284,7 +284,7 @@ class DijkstraApp(tk.Tk):
             
             # Ejecutar Dijkstra
             self.dijkstra.ejecutar_dijkstra(inicial)
-            self.log(f"🚀 Dijkstra ejecutado desde vértice {inicial}")
+            self.log(f"Dijkstra ejecutado desde vértice {inicial}")
             
             # Limpiar tabla
             self.tree.delete(*self.tree.get_children())
@@ -311,7 +311,7 @@ class DijkstraApp(tk.Tk):
                         camino_str
                     ))
             
-            self.log(f"📊 Resultados mostrados para {num_vertices} vértices")
+            self.log(f"Resultados mostrados para {num_vertices} vértices")
             messagebox.showinfo(
                 "Éxito",
                 f"Dijkstra ejecutado exitosamente\nDesde vértice: {inicial}"
@@ -334,7 +334,7 @@ class DijkstraApp(tk.Tk):
             self.entry_inicial.delete(0, tk.END)
             self.entry_inicial.insert(0, "1")
             
-            self.log("📝 Grafo de ejemplo cargado:")
+            self.log("Grafo de ejemplo cargado:")
             self.log("   Vértices: 5")
             self.log("   Aristas:")
             aristas = [
@@ -369,7 +369,7 @@ class DijkstraApp(tk.Tk):
             self.dijkstra.limpiar()
             self.tree.delete(*self.tree.get_children())
             self.log_text.delete(1.0, tk.END)
-            self.log("🧹 Todo limpiado")
+            self.log("Todo limpiado")
             
             # Reiniciar campos
             self.entry_vertices.delete(0, tk.END)
@@ -381,18 +381,14 @@ class DijkstraApp(tk.Tk):
 def main():
     """Función principal."""
     print("=" * 60)
-    print("🚀 Iniciando aplicación Tkinter - Dijkstra con DLL C++")
+    print("Iniciando aplicación Tkinter - Dijkstra con DLL C++")
     print("=" * 60)
     
     # Verificar que exista la DLL
     if not os.path.exists("dijkstra.dll"):
-        print("\n⚠️  ADVERTENCIA: No se encontró dijkstra.dll")
-        print("\n📝 Para compilar la DLL:")
-        print("   1. Instala MinGW-w64")
-        print("   2. Ejecuta: g++ -shared -o dijkstra.dll dijkstra.cpp -O2 -std=c++11")
-        print("\n   O ejecuta: compilar_dll.bat (en Windows)\n")
+        print("\nADVERTENCIA: No se encontró dijkstra.dll")
     else:
-        print("✅ dijkstra.dll encontrada")
+        print("dijkstra.dll encontrada")
     
     # Crear y ejecutar app
     app = DijkstraApp()

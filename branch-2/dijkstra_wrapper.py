@@ -44,12 +44,12 @@ class DijkstraWrapper:
         # Cargar DLL
         self.dll = ctypes.CDLL(dll_encontrada)
         self._configurar_funciones()
-        print(f"✅ DLL cargada exitosamente: {dll_encontrada}")
+        print(f"DLL cargada exitosamente: {dll_encontrada}")
         
         # Definir tipos de retorno y argumentos para cada función
         self._configurar_funciones()
         
-        print(f"✅ DLL cargada exitosamente: {dll_path}")
+        print(f"DLL cargada exitosamente: {dll_path}")
     
     def _configurar_funciones(self):
         """Configura los tipos de argumentos y retorno de las funciones de la DLL."""
@@ -97,13 +97,13 @@ class DijkstraWrapper:
     def prueba_conexion(self, a: int = 5, b: int = 10) -> int:
         """Prueba simple para verificar que la DLL funciona."""
         resultado = self.dll.prueba_suma(a, b)
-        print(f"🧪 Prueba: {a} + {b} = {resultado}")
+        print(f"Prueba: {a} + {b} = {resultado}")
         return resultado
     
     def inicializar(self, num_vertices: int):
         """Inicializa el grafo con N vértices."""
         self.dll.inicializar_grafo(num_vertices)
-        print(f"📊 Grafo inicializado con {num_vertices} vértices")
+        print(f"Grafo inicializado con {num_vertices} vértices")
     
     def agregar_arista(self, origen: int, destino: int, peso: int, dirigida: bool = False):
         """
@@ -123,7 +123,7 @@ class DijkstraWrapper:
     def ejecutar_dijkstra(self, vertice_inicial: int):
         """Ejecuta el algoritmo de Dijkstra desde un vértice inicial."""
         self.dll.ejecutar_dijkstra(vertice_inicial)
-        print(f"🚀 Dijkstra ejecutado desde vértice {vertice_inicial}")
+        print(f"Dijkstra ejecutado desde vértice {vertice_inicial}")
     
     def obtener_distancia(self, destino: int) -> int:
         """
@@ -165,11 +165,11 @@ class DijkstraWrapper:
     def limpiar(self):
         """Limpia el grafo."""
         self.dll.limpiar_grafo()
-        print("🧹 Grafo limpiado")
+        print("Grafo limpiado")
     
     def crear_grafo_ejemplo(self):
         """Crea el grafo del ejemplo del código original."""
-        print("\n📝 Creando grafo de ejemplo...")
+        print("\nCreando grafo de ejemplo...")
         self.inicializar(5)
         
         # Aristas del ejemplo original
@@ -183,7 +183,7 @@ class DijkstraWrapper:
         self.agregar_arista(4, 5, 5)
         self.agregar_arista(5, 3, 5)
         
-        print("✅ Grafo de ejemplo creado")
+        print("Grafo de ejemplo creado")
         print("   Vértices: 1, 2, 3, 4, 5")
         print("   Aristas: 9 aristas bidireccionales")
 
@@ -191,7 +191,7 @@ class DijkstraWrapper:
 def ejemplo_uso():
     """Ejemplo de uso del wrapper."""
     print("=" * 60)
-    print("🧪 Ejemplo de uso: Dijkstra con DLL de C++")
+    print("Ejemplo de uso: Dijkstra con DLL de C++")
     print("=" * 60)
     
     try:
@@ -209,7 +209,7 @@ def ejemplo_uso():
         dijkstra.ejecutar_dijkstra(vertice_inicial)
         
         # Obtener distancias
-        print(f"\n📊 Distancias más cortas desde vértice {vertice_inicial}:")
+        print(f"\nDistancias más cortas desde vértice {vertice_inicial}:")
         for vertice in range(1, 6):
             distancia = dijkstra.obtener_distancia(vertice)
             camino = dijkstra.obtener_camino(vertice)
@@ -221,13 +221,11 @@ def ejemplo_uso():
                 print(f"   Vértice {vertice}: distancia = {distancia}, camino = {camino_str}")
         
         print("\n" + "=" * 60)
-        print("✅ Ejemplo completado exitosamente")
+        print("Ejemplo completado exitosamente")
         print("=" * 60)
         
     except FileNotFoundError as e:
-        print(f"\n❌ Error: {e}")
-        print("\n📝 Para compilar la DLL:")
-        print("   g++ -shared -o dijkstra.dll dijkstra.cpp -O2 -std=c++11")
+        print(f"\nError: {e}")
     except Exception as e:
         print(f"\n❌ Error inesperado: {e}")
         import traceback
