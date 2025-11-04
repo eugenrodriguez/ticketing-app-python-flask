@@ -15,7 +15,7 @@ class IncidenteController:
         prioridad: str,
         ticket_id: int,
     ) -> Dict[str, Any]:
-        """Crea un nuevo incidente asociado a un ticket."""
+
         categorias_validas = ["Hardware", "Software", "Red", "Otro"]
         prioridades_validas = ["Baja", "Media", "Alta", "Crítica"]
         
