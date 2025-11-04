@@ -17,7 +17,7 @@ def get_connection(db_path: str = "app.db") -> sqlite3.Connection:
             conn.row_factory = sqlite3.Row
             _initialize_schema(conn)
             _set_connection(conn)
-    return _connection  # type: ignore[return-value]
+    return _connection 
 
 
 def _set_connection(conn: sqlite3.Connection) -> None:
