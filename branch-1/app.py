@@ -25,23 +25,8 @@ def create_app() -> Flask:
         "version": "2.0.0",
     }
     
-    swagger = Swagger(app, template={
-        "info": {
-            "title": "Sistema de Ticketing con SQLAlchemy",
-            "description": "API REST para gestión de tickets con relación 1:N (Ticket → Incidentes)",
-            "version": "2.0.0",
-        },
-        "tags": [
-            {
-                "name": "Tickets",
-                "description": "Operaciones relacionadas con tickets (1:N con incidentes)",
-            },
-            {
-                "name": "Incidentes",
-                "description": "Operaciones relacionadas con incidentes (N:1 con ticket)",
-            },
-        ],
-    })
+    # Cargar especificación desde el archivo YAML
+    swagger = Swagger(app, template_file="swagger_docs.yml")
     
     # Registrar blueprints con prefijos
     app.register_blueprint(incidente_bp, url_prefix="/incidentes")

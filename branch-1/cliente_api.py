@@ -13,7 +13,7 @@ BASE_URL = "http://localhost:8000"
 def print_response(title: str, response: requests.Response):
     """Imprime la respuesta de forma legible."""
     print(f"\n{'=' * 60}")
-    print(f"📡 {title}")
+    print(f"{title}")
     print(f"{'=' * 60}")
     print(f"Status Code: {response.status_code}")
     print(f"Response:")
@@ -22,7 +22,7 @@ def print_response(title: str, response: requests.Response):
 
 def crear_ticket_con_incidentes():
     """Ejemplo 1: Crear un ticket con múltiples incidentes."""
-    print("\n🎫 TEST 1: Crear ticket con múltiples incidentes (1:N)")
+    print("\nTEST 1: Crear ticket con múltiples incidentes (1:N)")
     
     data = {
         "cliente_id": 1,
@@ -51,7 +51,7 @@ def crear_ticket_con_incidentes():
 
 def obtener_ticket_con_incidentes(ticket_id: int):
     """Ejemplo 2: Obtener un ticket con sus incidentes."""
-    print("\n🔍 TEST 2: Obtener ticket con sus incidentes")
+    print("\nTEST 2: Obtener ticket con sus incidentes")
     
     response = requests.get(f"{BASE_URL}/tickets/{ticket_id}?incluir_incidentes=true")
     print_response(f"GET /tickets/{ticket_id}?incluir_incidentes=true", response)
@@ -59,7 +59,7 @@ def obtener_ticket_con_incidentes(ticket_id: int):
 
 def agregar_incidente_a_ticket(ticket_id: int):
     """Ejemplo 3: Agregar un nuevo incidente a un ticket existente."""
-    print("\n➕ TEST 3: Agregar incidente a ticket existente")
+    print("\nTEST 3: Agregar incidente a ticket existente")
     
     data = {
         "descripcion": "Ventilador hace ruido excesivo",
@@ -73,7 +73,7 @@ def agregar_incidente_a_ticket(ticket_id: int):
 
 def listar_todos_los_tickets():
     """Ejemplo 4: Listar todos los tickets."""
-    print("\n📋 TEST 4: Listar todos los tickets")
+    print("\TEST 4: Listar todos los tickets")
     
     response = requests.get(f"{BASE_URL}/tickets")
     print_response("GET /tickets", response)
@@ -81,7 +81,7 @@ def listar_todos_los_tickets():
 
 def listar_tickets_con_incidentes():
     """Ejemplo 5: Listar tickets incluyendo sus incidentes."""
-    print("\n📋 TEST 5: Listar tickets con incidentes incluidos")
+    print("\nTEST 5: Listar tickets con incidentes incluidos")
     
     response = requests.get(f"{BASE_URL}/tickets?incluir_incidentes=true")
     print_response("GET /tickets?incluir_incidentes=true", response)
@@ -89,7 +89,7 @@ def listar_tickets_con_incidentes():
 
 def crear_incidente_directo():
     """Ejemplo 6: Crear un incidente directamente asociado a un ticket."""
-    print("\n🆕 TEST 6: Crear incidente directamente")
+    print("\nTEST 6: Crear incidente directamente")
     
     data = {
         "descripcion": "Cable de red dañado",
@@ -104,7 +104,7 @@ def crear_incidente_directo():
 
 def listar_incidentes_por_ticket(ticket_id: int):
     """Ejemplo 7: Listar incidentes de un ticket específico."""
-    print("\n📋 TEST 7: Listar incidentes de un ticket")
+    print("\nTEST 7: Listar incidentes de un ticket")
     
     response = requests.get(f"{BASE_URL}/incidentes/ticket/{ticket_id}")
     print_response(f"GET /incidentes/ticket/{ticket_id}", response)
@@ -112,7 +112,7 @@ def listar_incidentes_por_ticket(ticket_id: int):
 
 def filtrar_incidentes_por_categoria():
     """Ejemplo 8: Filtrar incidentes por categoría."""
-    print("\n🔍 TEST 8: Filtrar incidentes por categoría")
+    print("\nTEST 8: Filtrar incidentes por categoría")
     
     response = requests.get(f"{BASE_URL}/incidentes/filtrar/categoria?categoria=Hardware")
     print_response("GET /incidentes/filtrar/categoria?categoria=Hardware", response)
@@ -120,7 +120,7 @@ def filtrar_incidentes_por_categoria():
 
 def cerrar_ticket(ticket_id: int):
     """Ejemplo 9: Cerrar un ticket."""
-    print("\n🔒 TEST 9: Cerrar ticket")
+    print("\nTEST 9: Cerrar ticket")
     
     response = requests.put(f"{BASE_URL}/tickets/{ticket_id}/cerrar")
     print_response(f"PUT /tickets/{ticket_id}/cerrar", response)
@@ -128,7 +128,7 @@ def cerrar_ticket(ticket_id: int):
 
 def reabrir_ticket(ticket_id: int):
     """Ejemplo 10: Reabrir un ticket."""
-    print("\n🔓 TEST 10: Reabrir ticket")
+    print("\nTEST 10: Reabrir ticket")
     
     response = requests.put(f"{BASE_URL}/tickets/{ticket_id}/reabrir")
     print_response(f"PUT /tickets/{ticket_id}/reabrir", response)
@@ -136,7 +136,7 @@ def reabrir_ticket(ticket_id: int):
 
 def filtrar_tickets_por_estado():
     """Ejemplo 11: Filtrar tickets por estado."""
-    print("\n🔍 TEST 11: Filtrar tickets por estado")
+    print("\nTEST 11: Filtrar tickets por estado")
     
     response = requests.get(f"{BASE_URL}/tickets/filtrar/estado?estado=Abierto")
     print_response("GET /tickets/filtrar/estado?estado=Abierto", response)
@@ -144,7 +144,7 @@ def filtrar_tickets_por_estado():
 
 def health_check():
     """Verifica que la API esté funcionando."""
-    print("\n❤️  TEST 0: Health Check")
+    print("\nTEST 0: Health Check")
     
     response = requests.get(f"{BASE_URL}/health")
     print_response("GET /health", response)
@@ -153,7 +153,7 @@ def health_check():
 def main():
     """Ejecuta todos los tests del cliente."""
     print("=" * 60)
-    print("🚀 Cliente HTTP - Probando API de Ticketing")
+    print("Cliente HTTP - Probando API de Ticketing")
     print("=" * 60)
     print(f"Base URL: {BASE_URL}")
     
@@ -165,7 +165,7 @@ def main():
         ticket_id = crear_ticket_con_incidentes()
         
         if not ticket_id:
-            print("\n❌ Error: No se pudo crear el ticket")
+            print("\nError: No se pudo crear el ticket")
             return
         
         # Test 2: Obtener ticket con incidentes
@@ -199,15 +199,15 @@ def main():
         filtrar_tickets_por_estado()
         
         print("\n" + "=" * 60)
-        print("✅ Todos los tests completados exitosamente")
+        print("Todos los tests completados exitosamente")
         print("=" * 60)
         
     except requests.exceptions.ConnectionError:
-        print("\n❌ Error: No se pudo conectar a la API")
+        print("\nError: No se pudo conectar a la API")
         print("   Asegúrate de que el servidor esté corriendo:")
         print("   python app.py")
     except Exception as e:
-        print(f"\n❌ Error inesperado: {e}")
+        print(f"\nError inesperado: {e}")
         import traceback
         traceback.print_exc()
 

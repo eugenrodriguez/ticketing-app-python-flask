@@ -9,7 +9,7 @@ from typing import List, Tuple, Optional
 
 
 class DijkstraWrapper:
-    """Clase wrapper para interactuar con la DLL de Dijkstra."""
+    """Clase wrapper para interactuar con la DLL de Dijkstra mediante ctypes."""
     
     def __init__(self, dll_path: str = "dijkstra.dll"):
         """

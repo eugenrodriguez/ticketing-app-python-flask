@@ -47,7 +47,7 @@ class Ticket(Base):
             self.fecha_cierre = None
     
     def to_dict(self, incluir_incidentes=False):
-        """Convierte el ticket a diccionario."""
+        """Convierte el ticket (objeto) a diccionario."""
         data = {
             "id": self.id,
             "cliente_id": self.cliente_id,

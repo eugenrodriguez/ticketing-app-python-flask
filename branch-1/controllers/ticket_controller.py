@@ -23,12 +23,6 @@ class TicketController:
         """
         Crea un nuevo ticket con sus incidentes asociados (relación 1:N).
         
-        Args:
-            cliente_id: ID del cliente
-            servicio_id: ID del servicio
-            equipo_id: ID del equipo
-            empleado_id: ID del empleado
-            incidentes_data: Lista de incidentes a asociar (opcional)
         """
         # Crear el ticket
         ticket = Ticket(
