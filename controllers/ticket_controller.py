@@ -87,8 +87,6 @@ class TicketController:
         empleado_id = self._ensure_empleado(
             empleado["nombre"], empleado["categoria"], empleado["rol"],
         )
-
-        # Incidente must exist (created from IncidenteController or here)
         cursor = self.conn.cursor()
         cursor.execute(
             "SELECT id FROM incidentes WHERE id = ?",
