@@ -36,7 +36,6 @@ void relajacion(int actual, int adyacente, int peso) {
     }
 }
 
-// Algoritmo de Dijkstra
 void dijkstra_internal(int inicial) {
     init();
     priority_queue<Node, vector<Node>, cmp> Q;
@@ -83,10 +82,8 @@ int reconstruir_camino(int destino, int* camino) {
     return longitud;
 }
 
-// ========================================
-// FUNCIONES EXPORTADAS PARA PYTHON
-// ========================================
 
+// FUNCIONES EXPORTADAS PARA PYTHON
 extern "C" {
 
 __declspec(dllexport) void inicializar_grafo(int num_vertices) {
