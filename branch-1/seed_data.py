@@ -1,8 +1,3 @@
-"""
-Script para insertar datos de prueba con SQLAlchemy
-Demuestra la relación 1:N entre Ticket e Incidentes
-"""
-
 from database.db import init_db, get_session
 from models.ticket import Ticket
 from models.incidente import Incidente
@@ -10,16 +5,13 @@ from sqlalchemy import text
 
 
 def insertar_datos_hardcodeados():
-    """Inserta datos hardcodeados en tablas auxiliares."""
     init_db()
     session = get_session()
     
     print("Insertando datos hardcodeados...")
     
-    # Usar conexión directa para tablas hardcodeadas
     conn = session.connection()
     
-    # Clientes
     conn.execute(text("DELETE FROM clientes"))
     clientes = [
         (1, "Juan Pérez", "juan@email.com", "555-0001", "Calle Falsa 123"),
@@ -34,7 +26,6 @@ def insertar_datos_hardcodeados():
             "telefono": cliente[3], "direccion": cliente[4]})
     print(f" {len(clientes)} clientes insertados")
     
-    # Empleados
     conn.execute(text("DELETE FROM empleados"))
     empleados = [
         (1, "Pedro Técnico", "Técnico", "Soporte Técnico"),
@@ -48,7 +39,6 @@ def insertar_datos_hardcodeados():
         ), {"id": empleado[0], "nombre": empleado[1], "categoria": empleado[2], "rol": empleado[3]})
     print(f" {len(empleados)} empleados insertados")
     
-    # Equipos
     conn.execute(text("DELETE FROM equipos"))
     equipos = [
         (1, "Notebook Dell Inspiron", "Computadora", "Dell", "Inspiron 15", "SN12345"),
@@ -63,7 +53,6 @@ def insertar_datos_hardcodeados():
             "marca": equipo[3], "modelo": equipo[4], "serie": equipo[5]})
     print(f" {len(equipos)} equipos insertados")
     
-    # Servicios
     conn.execute(text("DELETE FROM servicios"))
     servicios = [
         (1, "Reparación de Hardware"),
@@ -80,17 +69,14 @@ def insertar_datos_hardcodeados():
 
 
 def insertar_tickets_con_incidentes():
-    """Inserta tickets con sus incidentes usando SQLAlchemy (relación 1:N)."""
     session = get_session()
     
     print(" Insertando tickets con incidentes (relación 1:N)...")
     
-    # Limpiar datos anteriores
     session.query(Incidente).delete()
     session.query(Ticket).delete()
     session.commit()
     
-    # Ticket 1: Con múltiples incidentes de hardware
     ticket1 = Ticket(
         cliente_id=1,
         servicio_id=1,
@@ -102,7 +88,7 @@ def insertar_tickets_con_incidentes():
         descripcion="Pantalla no enciende",
         categoria="Hardware",
         prioridad="Alta",
-        ticket_id=0  # Se asignará automáticamente
+        ticket_id=0  
     ))
     ticket1.incidentes.append(Incidente(
         descripcion="Batería no carga",
@@ -112,7 +98,6 @@ def insertar_tickets_con_incidentes():
     ))
     session.add(ticket1)
     
-    # Ticket 2: Con incidente de software
     ticket2 = Ticket(
         cliente_id=2,
         servicio_id=2,
@@ -128,7 +113,6 @@ def insertar_tickets_con_incidentes():
     ))
     session.add(ticket2)
     
-    # Ticket 3: Con múltiples incidentes de red
     ticket3 = Ticket(
         cliente_id=3,
         servicio_id=3,
@@ -156,7 +140,6 @@ def insertar_tickets_con_incidentes():
     ))
     session.add(ticket3)
     
-    # Guardar todos
     session.commit()
     
     print(f" 3 tickets creados con total de 6 incidentes")
