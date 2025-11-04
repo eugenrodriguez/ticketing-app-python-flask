@@ -1,9 +1,3 @@
-@echo off
-REM ============================================
-REM Script para compilar dijkstra.dll en Windows
-REM Requiere: MinGW-w64 instalado
-REM ============================================
-
 echo ============================================
 echo Compilando dijkstra.dll con MinGW
 echo ============================================
