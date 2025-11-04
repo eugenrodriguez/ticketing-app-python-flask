@@ -4,7 +4,6 @@ from models.incidente import Incidente
 
 
 class IncidenteController:
-    """Controlador de lógica de negocio para incidentes."""
     
     def __init__(self):
         self.repo = IncidenteRepository()
