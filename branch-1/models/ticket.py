@@ -5,10 +5,8 @@ from models.base import Base
 
 
 class Ticket(Base):
-    """Modelo de Ticket con SQLAlchemy - Relación 1:N con Incidentes."""
     __tablename__ = 'tickets'
     
-    # Columnas
     id = Column(Integer, primary_key=True, autoincrement=True)
     cliente_id = Column(Integer, nullable=False)
     servicio_id = Column(Integer, nullable=False)
@@ -18,7 +16,6 @@ class Ticket(Base):
     fecha_creacion = Column(String(50), nullable=False)
     fecha_cierre = Column(String(50), nullable=True)
     
-    # Relación 1:N - Un ticket tiene muchos incidentes
     incidentes = relationship(
         "Incidente",
         back_populates="ticket",
@@ -36,18 +33,15 @@ class Ticket(Base):
         self.fecha_cierre = None
     
     def cerrar(self):
-        """Cierra el ticket."""
         self.estado = "Cerrado"
         self.fecha_cierre = datetime.now().isoformat()
     
     def reabrir(self):
-        """Reabre un ticket cerrado."""
         if self.estado == "Cerrado":
             self.estado = "Reabierto"
             self.fecha_cierre = None
     
     def to_dict(self, incluir_incidentes=False):
-        """Convierte el ticket (objeto) a diccionario."""
         data = {
             "id": self.id,
             "cliente_id": self.cliente_id,
