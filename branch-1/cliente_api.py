@@ -1,8 +1,3 @@
-"""
-Cliente HTTP para consumir la API de Ticketing
-Demuestra la relación 1:N entre Ticket e Incidentes
-"""
-
 import requests
 import json
 from typing import Dict, Any
@@ -158,44 +153,32 @@ def main():
     print(f"Base URL: {BASE_URL}")
     
     try:
-        # Test 0: Verificar que la API esté funcionando
         health_check()
         
-        # Test 1: Crear ticket con múltiples incidentes
         ticket_id = crear_ticket_con_incidentes()
         
         if not ticket_id:
             print("\nError: No se pudo crear el ticket")
             return
         
-        # Test 2: Obtener ticket con incidentes
         obtener_ticket_con_incidentes(ticket_id)
         
-        # Test 3: Agregar incidente al ticket
         agregar_incidente_a_ticket(ticket_id)
         
-        # Test 4: Listar todos los tickets
         listar_todos_los_tickets()
         
-        # Test 5: Listar tickets con incidentes
         listar_tickets_con_incidentes()
         
-        # Test 6: Crear incidente directamente
         crear_incidente_directo()
         
-        # Test 7: Listar incidentes de un ticket
         listar_incidentes_por_ticket(ticket_id)
         
-        # Test 8: Filtrar incidentes por categoría
         filtrar_incidentes_por_categoria()
         
-        # Test 9: Cerrar ticket
         cerrar_ticket(ticket_id)
         
-        # Test 10: Reabrir ticket
         reabrir_ticket(ticket_id)
         
-        # Test 11: Filtrar tickets por estado
         filtrar_tickets_por_estado()
         
         print("\n" + "=" * 60)
