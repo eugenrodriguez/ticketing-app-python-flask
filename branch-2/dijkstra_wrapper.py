@@ -1,23 +1,12 @@
-"""
-Wrapper Python para la DLL de Dijkstra en C++
-Usa ctypes para llamar funciones de la DLL
-"""
-
 import ctypes
 import os
 from typing import List, Tuple, Optional
 
 
 class DijkstraWrapper:
-    """Clase wrapper para interactuar con la DLL de Dijkstra mediante ctypes."""
     
     def __init__(self, dll_path: str = "dijkstra.dll"):
-        """
-        Inicializa el wrapper cargando la DLL.
-        
-        Args:
-            dll_path: Ruta al archivo dijkstra.dll
-        """
+    
         base_dir = os.path.dirname(os.path.abspath(__file__))
     
         posibles_rutas = [
@@ -49,7 +38,6 @@ class DijkstraWrapper:
         print(f"DLL cargada exitosamente: {dll_path}")
     
     def _configurar_funciones(self):
-        """Configura los tipos de argumentos y retorno de las funciones de la DLL."""
         
         self.dll.inicializar_grafo.argtypes = [ctypes.c_int]
         self.dll.inicializar_grafo.restype = None
@@ -82,52 +70,28 @@ class DijkstraWrapper:
         self.dll.obtener_num_vertices.restype = ctypes.c_int
     
     def prueba_conexion(self, a: int = 5, b: int = 10) -> int:
-        """Prueba simple para verificar que la DLL funciona."""
         resultado = self.dll.prueba_suma(a, b)
         print(f"Prueba: {a} + {b} = {resultado}")
         return resultado
     
     def inicializar(self, num_vertices: int):
-        """Inicializa el grafo con N vértices."""
         self.dll.inicializar_grafo(num_vertices)
         print(f"Grafo inicializado con {num_vertices} vértices")
     
     def agregar_arista(self, origen: int, destino: int, peso: int, dirigida: bool = False):
-        """
-        Agrega una arista al grafo.
-        
-        Args:
-            origen: Vértice origen
-            destino: Vértice destino
-            peso: Peso de la arista
-            dirigida: Si True, agrega arista dirigida; si False, no dirigida (bidireccional)
-        """
         if dirigida:
             self.dll.agregar_arista_dirigida(origen, destino, peso)
         else:
             self.dll.agregar_arista(origen, destino, peso)
     
     def ejecutar_dijkstra(self, vertice_inicial: int):
-        """Ejecuta el algoritmo de Dijkstra desde un vértice inicial."""
         self.dll.ejecutar_dijkstra(vertice_inicial)
         print(f"Dijkstra ejecutado desde vértice {vertice_inicial}")
     
     def obtener_distancia(self, destino: int) -> int:
-        """
-        Obtiene la distancia más corta al vértice destino.
-        
-        Returns:
-            Distancia más corta, o -1 si no hay camino
-        """
         return self.dll.obtener_distancia(destino)
     
     def obtener_camino(self, destino: int) -> List[int]:
-        """
-        Obtiene el camino más corto al vértice destino.
-        
-        Returns:
-            Lista de vértices que forman el camino, o lista vacía si no hay camino
-        """
         buffer = (ctypes.c_int * 1000)()
         longitud = self.dll.obtener_camino(destino, buffer)
         
@@ -137,24 +101,16 @@ class DijkstraWrapper:
         return [buffer[i] for i in range(longitud)]
     
     def obtener_todas_distancias(self) -> List[int]:
-        """
-        Obtiene las distancias más cortas a todos los vértices.
-        
-        Returns:
-            Lista con distancias (índice 0 = vértice 1, etc.)
-        """
         num_vertices = self.dll.obtener_num_vertices()
         buffer = (ctypes.c_int * num_vertices)()
         self.dll.obtener_todas_distancias(buffer)
         return [buffer[i] for i in range(num_vertices)]
     
     def limpiar(self):
-        """Limpia el grafo."""
         self.dll.limpiar_grafo()
         print("Grafo limpiado")
     
     def crear_grafo_ejemplo(self):
-        """Crea el grafo del ejemplo del código original."""
         print("\nCreando grafo de ejemplo...")
         self.inicializar(5)
         
@@ -174,7 +130,6 @@ class DijkstraWrapper:
 
 
 def ejemplo_uso():
-    """Ejemplo de uso del wrapper."""
     print("=" * 60)
     print("Ejemplo de uso: Dijkstra con DLL de C++")
     print("=" * 60)
@@ -207,7 +162,7 @@ def ejemplo_uso():
     except FileNotFoundError as e:
         print(f"\nError: {e}")
     except Exception as e:
-        print(f"\n❌ Error inesperado: {e}")
+        print(f"\n Error inesperado: {e}")
         import traceback
         traceback.print_exc()
 
