@@ -1,8 +1,5 @@
 \
-        // C++ library exposing a C API for Dijkstra.
-        // Compile as shared library:
-        // Linux: g++ -O2 -shared -fPIC dijkstra.cpp -o libdijkstra.so
-        // Windows (MinGW): g++ -O2 -shared -static-libgcc -static-libstdc++ -o dijkstra.dll dijkstra.cpp
+//  (MinGW): g++ -O2 -shared -static-libgcc -static-libstdc++ -o dijkstra.dll dijkstra.cpp
 
         #include <vector>
         #include <queue>
@@ -10,9 +7,6 @@
         #include <cstring>
         extern "C" {
 
-        // computes shortest paths; arrays src,dst,wt length = E
-        // out_dist and out_prev must be preallocated with size V (int*).
-        // returns 0 on success.
         int dijkstra_c(int V, int E, const int* src, const int* dst, const int* wt, int source, int* out_dist, int* out_prev) {
             if (V <= 0) return -1;
             const int INF = 1<<30;
@@ -42,7 +36,6 @@
                     }
                 }
             }
-            // copy to out arrays (index 1..V)
             for(int i=1;i<=V;i++){
                 out_dist[i-1] = dist[i]==INF ? -1 : dist[i];
                 out_prev[i-1] = prev[i];
@@ -50,4 +43,4 @@
             return 0;
         }
 
-        } // extern C
+        } 
