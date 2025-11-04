@@ -39,7 +39,6 @@ class IncidenteRepository:
         return self.session.query(Incidente).filter(Incidente.prioridad == prioridad).all()
     
     def actualizar(self, incidente: Incidente) -> Incidente:
-        """Actualiza un incidente existente."""
         self.session.commit()
         self.session.refresh(incidente)
         return incidente
