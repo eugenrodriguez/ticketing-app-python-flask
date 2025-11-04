@@ -78,6 +78,5 @@ class IncidenteController:
         return [incidente.to_dict() for incidente in incidentes]
     
     def filtrar_por_prioridad(self, prioridad: str) -> List[Dict[str, Any]]:
-        """Filtra incidentes por prioridad."""
         incidentes = self.repo.filtrar_por_prioridad(prioridad)
         return [incidente.to_dict() for incidente in incidentes]
