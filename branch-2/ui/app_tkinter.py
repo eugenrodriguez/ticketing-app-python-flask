@@ -1,7 +1,3 @@
-"""
-Interfaz Tkinter para visualizar el algoritmo de Dijkstra
-Consume DLL de C++ vía ctypes
-"""
 import sys 
 import os 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -14,7 +10,6 @@ from dijkstra_wrapper import DijkstraWrapper
 
 
 class DijkstraApp(tk.Tk):
-    """Aplicación principal de Tkinter para Dijkstra."""
     
     def __init__(self):
         super().__init__()
@@ -23,7 +18,6 @@ class DijkstraApp(tk.Tk):
         self.geometry("900x700")
         self.configure(bg="#f0f0f0")
         
-        # Intentar cargar la DLL
         try:
             self.dijkstra = DijkstraWrapper("dijkstra.dll")
             self.dll_cargada = True
@@ -36,17 +30,12 @@ class DijkstraApp(tk.Tk):
                 "g++ -shared -o dijkstra.dll dijkstra.cpp -O2 -std=c++11"
             )
         
-        # Crear interfaz
         self._crear_interfaz()
         
-        # Cargar grafo de ejemplo por defecto
         if self.dll_cargada:
             self.cargar_grafo_ejemplo()
     
-    def _crear_interfaz(self):
-        """Crea todos los elementos de la interfaz."""
-        
-        # Frame superior: Título
+    def _crear_interfaz(self):        
         frame_titulo = tk.Frame(self, bg="#2c3e50", height=60)
         frame_titulo.pack(fill=tk.X, pady=(0, 10))
         
@@ -59,21 +48,16 @@ class DijkstraApp(tk.Tk):
             pady=15
         ).pack()
         
-        # Frame principal dividido en 2 columnas
         frame_principal = tk.Frame(self, bg="#f0f0f0")
         frame_principal.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         
-        # Columna izquierda: Configuración del grafo
         self._crear_panel_configuracion(frame_principal)
         
-        # Columna derecha: Resultados
         self._crear_panel_resultados(frame_principal)
         
-        # Frame inferior: Botones de acción
         self._crear_panel_acciones()
     
     def _crear_panel_configuracion(self, parent):
-        """Panel izquierdo: configuración del grafo."""
         frame_config = ttk.LabelFrame(
             parent,
             text="Configuración del Grafo",
@@ -83,7 +67,6 @@ class DijkstraApp(tk.Tk):
         parent.columnconfigure(0, weight=1)
         parent.rowconfigure(0, weight=1)
         
-        # Número de vértices
         ttk.Label(frame_config, text="Número de vértices:").grid(row=0, column=0, sticky=tk.W, pady=5)
         self.entry_vertices = ttk.Entry(frame_config, width=10)
         self.entry_vertices.grid(row=0, column=1, sticky=tk.W, pady=5)
@@ -95,12 +78,10 @@ class DijkstraApp(tk.Tk):
             command=self.inicializar_grafo
         ).grid(row=0, column=2, padx=5, pady=5)
         
-        # Separador
         ttk.Separator(frame_config, orient=tk.HORIZONTAL).grid(
             row=1, column=0, columnspan=3, sticky="ew", pady=10
         )
         
-        # Agregar aristas
         ttk.Label(frame_config, text="Agregar Arista", font=("Arial", 10, "bold")).grid(
             row=2, column=0, columnspan=3, sticky=tk.W, pady=5
         )
@@ -130,12 +111,10 @@ class DijkstraApp(tk.Tk):
             command=self.agregar_arista
         ).grid(row=7, column=0, columnspan=2, pady=10)
         
-        # Separador
         ttk.Separator(frame_config, orient=tk.HORIZONTAL).grid(
             row=8, column=0, columnspan=3, sticky="ew", pady=10
         )
         
-        # Vértice inicial para Dijkstra
         ttk.Label(frame_config, text="Vértice inicial:").grid(row=9, column=0, sticky=tk.W)
         self.entry_inicial = ttk.Entry(frame_config, width=10)
         self.entry_inicial.grid(row=9, column=1, sticky=tk.W)
@@ -148,7 +127,6 @@ class DijkstraApp(tk.Tk):
             style="Accent.TButton"
         ).grid(row=10, column=0, columnspan=2, pady=10)
         
-        # Log de acciones
         ttk.Label(frame_config, text="Log de Acciones:").grid(
             row=11, column=0, columnspan=3, sticky=tk.W, pady=(10, 5)
         )
@@ -163,7 +141,6 @@ class DijkstraApp(tk.Tk):
         frame_config.rowconfigure(12, weight=1)
     
     def _crear_panel_resultados(self, parent):
-        """Panel derecho: resultados de Dijkstra."""
         frame_resultados = ttk.LabelFrame(
             parent,
             text="Resultados - Distancias y Caminos",
@@ -172,7 +149,6 @@ class DijkstraApp(tk.Tk):
         frame_resultados.grid(row=0, column=1, sticky="nsew", padx=(5, 0))
         parent.columnconfigure(1, weight=1)
         
-        # Tabla de resultados
         self.tree = ttk.Treeview(
             frame_resultados,
             columns=("vertice", "distancia", "camino"),
@@ -190,13 +166,11 @@ class DijkstraApp(tk.Tk):
         
         self.tree.pack(fill=tk.BOTH, expand=True)
         
-        # Scrollbar
         scrollbar = ttk.Scrollbar(frame_resultados, orient=tk.VERTICAL, command=self.tree.yview)
         self.tree.configure(yscroll=scrollbar.set)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
     
     def _crear_panel_acciones(self):
-        """Panel inferior: botones de acción."""
         frame_acciones = tk.Frame(self, bg="#ecf0f1", height=60)
         frame_acciones.pack(fill=tk.X, side=tk.BOTTOM, pady=(10, 0))
         
@@ -222,12 +196,10 @@ class DijkstraApp(tk.Tk):
         ).pack(side=tk.RIGHT, padx=10, pady=10)
     
     def log(self, mensaje):
-        """Agrega un mensaje al log."""
         self.log_text.insert(tk.END, f"{mensaje}\n")
         self.log_text.see(tk.END)
     
     def inicializar_grafo(self):
-        """Inicializa el grafo con N vértices."""
         if not self.dll_cargada:
             messagebox.showerror("Error", "DLL no cargada")
             return
@@ -245,7 +217,6 @@ class DijkstraApp(tk.Tk):
             messagebox.showerror("Error", "Ingrese un número válido de vértices")
     
     def agregar_arista(self):
-        """Agrega una arista al grafo."""
         if not self.dll_cargada:
             return
         
@@ -263,7 +234,6 @@ class DijkstraApp(tk.Tk):
             tipo = "dirigida" if dirigida else "bidireccional"
             self.log(f"Arista agregada: {origen} → {destino} (peso: {peso}, {tipo})")
             
-            # Limpiar campos
             self.entry_origen.delete(0, tk.END)
             self.entry_destino.delete(0, tk.END)
             self.entry_peso.delete(0, tk.END)
@@ -272,7 +242,6 @@ class DijkstraApp(tk.Tk):
             messagebox.showerror("Error", "Ingrese valores numéricos válidos")
     
     def ejecutar_dijkstra(self):
-        """Ejecuta Dijkstra y muestra resultados."""
         if not self.dll_cargada:
             return
         
@@ -282,17 +251,13 @@ class DijkstraApp(tk.Tk):
             if inicial <= 0:
                 raise ValueError
             
-            # Ejecutar Dijkstra
             self.dijkstra.ejecutar_dijkstra(inicial)
             self.log(f"Dijkstra ejecutado desde vértice {inicial}")
             
-            # Limpiar tabla
             self.tree.delete(*self.tree.get_children())
             
-            # Obtener número de vértices
             num_vertices = int(self.entry_vertices.get())
             
-            # Llenar tabla con resultados
             for vertice in range(1, num_vertices + 1):
                 distancia = self.dijkstra.obtener_distancia(vertice)
                 camino = self.dijkstra.obtener_camino(vertice)
@@ -323,7 +288,6 @@ class DijkstraApp(tk.Tk):
             messagebox.showerror("Error", f"Error al ejecutar Dijkstra: {e}")
     
     def cargar_grafo_ejemplo(self):
-        """Carga el grafo de ejemplo del código original."""
         if not self.dll_cargada:
             return
         
@@ -356,7 +320,6 @@ class DijkstraApp(tk.Tk):
             messagebox.showerror("Error", f"Error al cargar grafo: {e}")
     
     def limpiar_todo(self):
-        """Limpia el grafo y la interfaz."""
         if not self.dll_cargada:
             return
         
@@ -371,7 +334,6 @@ class DijkstraApp(tk.Tk):
             self.log_text.delete(1.0, tk.END)
             self.log("Todo limpiado")
             
-            # Reiniciar campos
             self.entry_vertices.delete(0, tk.END)
             self.entry_vertices.insert(0, "5")
             self.entry_inicial.delete(0, tk.END)
@@ -379,18 +341,15 @@ class DijkstraApp(tk.Tk):
 
 
 def main():
-    """Función principal."""
     print("=" * 60)
     print("Iniciando aplicación Tkinter - Dijkstra con DLL C++")
     print("=" * 60)
     
-    # Verificar que exista la DLL
     if not os.path.exists("dijkstra.dll"):
         print("\nADVERTENCIA: No se encontró dijkstra.dll")
     else:
         print("dijkstra.dll encontrada")
     
-    # Crear y ejecutar app
     app = DijkstraApp()
     app.mainloop()
 
