@@ -20,11 +20,10 @@ class DijkstraWrapper:
         """
         base_dir = os.path.dirname(os.path.abspath(__file__))
     
-        # Buscar DLL en ubicaciones posibles
         posibles_rutas = [
-            os.path.join(base_dir, dll_path),               # misma carpeta
-            os.path.join(base_dir, "cpp", dll_path),        # subcarpeta cpp
-            os.path.join(os.getcwd(), dll_path),            # carpeta de ejecución actual
+            os.path.join(base_dir, dll_path),              
+            os.path.join(base_dir, "cpp", dll_path),        
+            os.path.join(os.getcwd(), dll_path),            
         ]
         
         dll_encontrada = None
@@ -41,12 +40,10 @@ class DijkstraWrapper:
                 f"g++ -shared -o dijkstra.dll cpp/dijkstra.cpp -O2 -std=c++11"
             )
         
-        # Cargar DLL
         self.dll = ctypes.CDLL(dll_encontrada)
         self._configurar_funciones()
         print(f"DLL cargada exitosamente: {dll_encontrada}")
         
-        # Definir tipos de retorno y argumentos para cada función
         self._configurar_funciones()
         
         print(f"DLL cargada exitosamente: {dll_path}")
@@ -54,43 +51,33 @@ class DijkstraWrapper:
     def _configurar_funciones(self):
         """Configura los tipos de argumentos y retorno de las funciones de la DLL."""
         
-        # inicializar_grafo(int num_vertices)
         self.dll.inicializar_grafo.argtypes = [ctypes.c_int]
         self.dll.inicializar_grafo.restype = None
         
-        # agregar_arista(int origen, int destino, int peso)
         self.dll.agregar_arista.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int]
         self.dll.agregar_arista.restype = None
         
-        # agregar_arista_dirigida(int origen, int destino, int peso)
         self.dll.agregar_arista_dirigida.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int]
         self.dll.agregar_arista_dirigida.restype = None
         
-        # ejecutar_dijkstra(int inicial)
         self.dll.ejecutar_dijkstra.argtypes = [ctypes.c_int]
         self.dll.ejecutar_dijkstra.restype = None
         
-        # obtener_distancia(int destino) -> int
         self.dll.obtener_distancia.argtypes = [ctypes.c_int]
         self.dll.obtener_distancia.restype = ctypes.c_int
         
-        # obtener_camino(int destino, int* buffer) -> int
         self.dll.obtener_camino.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.c_int)]
         self.dll.obtener_camino.restype = ctypes.c_int
         
-        # obtener_todas_distancias(int* buffer)
         self.dll.obtener_todas_distancias.argtypes = [ctypes.POINTER(ctypes.c_int)]
         self.dll.obtener_todas_distancias.restype = None
         
-        # limpiar_grafo()
         self.dll.limpiar_grafo.argtypes = []
         self.dll.limpiar_grafo.restype = None
         
-        # prueba_suma(int a, int b) -> int
         self.dll.prueba_suma.argtypes = [ctypes.c_int, ctypes.c_int]
         self.dll.prueba_suma.restype = ctypes.c_int
         
-        # obtener_num_vertices() -> int
         self.dll.obtener_num_vertices.argtypes = []
         self.dll.obtener_num_vertices.restype = ctypes.c_int
     
@@ -141,7 +128,6 @@ class DijkstraWrapper:
         Returns:
             Lista de vértices que forman el camino, o lista vacía si no hay camino
         """
-        # Buffer para almacenar el camino (máximo 1000 vértices)
         buffer = (ctypes.c_int * 1000)()
         longitud = self.dll.obtener_camino(destino, buffer)
         
@@ -172,7 +158,6 @@ class DijkstraWrapper:
         print("\nCreando grafo de ejemplo...")
         self.inicializar(5)
         
-        # Aristas del ejemplo original
         self.agregar_arista(1, 2, 7)
         self.agregar_arista(1, 4, 2)
         self.agregar_arista(2, 3, 1)
@@ -195,20 +180,15 @@ def ejemplo_uso():
     print("=" * 60)
     
     try:
-        # Crear wrapper
         dijkstra = DijkstraWrapper("dijkstra.dll")
         
-        # Prueba simple
         dijkstra.prueba_conexion(10, 20)
         
-        # Crear grafo de ejemplo
         dijkstra.crear_grafo_ejemplo()
         
-        # Ejecutar Dijkstra desde vértice 1
         vertice_inicial = 1
         dijkstra.ejecutar_dijkstra(vertice_inicial)
         
-        # Obtener distancias
         print(f"\nDistancias más cortas desde vértice {vertice_inicial}:")
         for vertice in range(1, 6):
             distancia = dijkstra.obtener_distancia(vertice)
