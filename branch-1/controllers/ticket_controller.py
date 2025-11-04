@@ -6,7 +6,6 @@ from models.incidente import Incidente
 
 
 class TicketController:
-    """Controlador de lógica de negocio para tickets."""
     
     def __init__(self):
         self.ticket_repo = TicketRepository()
@@ -20,11 +19,7 @@ class TicketController:
         empleado_id: int,
         incidentes_data: List[Dict[str, str]] = None,
     ) -> Dict[str, Any]:
-        """
-        Crea un nuevo ticket con sus incidentes asociados (relación 1:N).
-        
-        """
-        # Crear el ticket
+
         ticket = Ticket(
             cliente_id=cliente_id,
             servicio_id=servicio_id,
@@ -32,18 +27,16 @@ class TicketController:
             empleado_id=empleado_id,
         )
         
-        # Crear incidentes asociados si se proporcionan
         if incidentes_data:
             for inc_data in incidentes_data:
                 incidente = Incidente(
                     descripcion=inc_data["descripcion"],
                     categoria=inc_data["categoria"],
                     prioridad=inc_data["prioridad"],
-                    ticket_id=0  # Se asignará al guardar el ticket
+                    ticket_id=0 
                 )
                 ticket.incidentes.append(incidente)
         
-        # Guardar en BD
         ticket_guardado = self.ticket_repo.crear(ticket)
         
         return {
@@ -55,19 +48,16 @@ class TicketController:
         }
     
     def obtener_ticket(self, ticket_id: int, incluir_incidentes: bool = True) -> Optional[Dict[str, Any]]:
-        """Obtiene los detalles de un ticket con sus incidentes."""
         ticket = self.ticket_repo.obtener_por_id(ticket_id)
         if ticket:
             return ticket.to_dict(incluir_incidentes=incluir_incidentes)
         return None
     
     def listar_tickets(self, incluir_incidentes: bool = False) -> List[Dict[str, Any]]:
-        """Lista todos los tickets."""
         tickets = self.ticket_repo.listar_todos()
         return [ticket.to_dict(incluir_incidentes=incluir_incidentes) for ticket in tickets]
     
     def cambiar_estado_ticket(self, ticket_id: int, nuevo_estado: str) -> Dict[str, Any]:
-        """Cambia el estado de un ticket."""
         estados_validos = ["Abierto", "En Progreso", "Cerrado", "Reabierto"]
         if nuevo_estado not in estados_validos:
             return {
@@ -87,7 +77,6 @@ class TicketController:
         }
     
     def cerrar_ticket(self, ticket_id: int) -> Dict[str, Any]:
-        """Cierra un ticket."""
         exito = self.ticket_repo.cerrar_ticket(ticket_id)
         if exito:
             return {
@@ -100,7 +89,6 @@ class TicketController:
         }
     
     def reabrir_ticket(self, ticket_id: int) -> Dict[str, Any]:
-        """Reabre un ticket cerrado."""
         exito = self.ticket_repo.reabrir_ticket(ticket_id)
         if exito:
             return {
@@ -113,7 +101,6 @@ class TicketController:
         }
     
     def filtrar_por_estado(self, estado: str) -> List[Dict[str, Any]]:
-        """Filtra tickets por estado."""
         tickets = self.ticket_repo.filtrar_por_estado(estado)
         return [ticket.to_dict() for ticket in tickets]
     
@@ -124,8 +111,7 @@ class TicketController:
         categoria: str, 
         prioridad: str
     ) -> Dict[str, Any]:
-        """Agrega un nuevo incidente a un ticket existente."""
-        # Validar categoría y prioridad
+
         categorias_validas = ["Hardware", "Software", "Red", "Otro"]
         prioridades_validas = ["Baja", "Media", "Alta", "Crítica"]
         
@@ -141,7 +127,6 @@ class TicketController:
                 "mensaje": f"Prioridad inválida. Válidas: {', '.join(prioridades_validas)}",
             }
         
-        # Crear incidente
         incidente = Incidente(
             descripcion=descripcion,
             categoria=categoria,
@@ -149,7 +134,6 @@ class TicketController:
             ticket_id=ticket_id,
         )
         
-        # Agregar al ticket
         exito = self.ticket_repo.agregar_incidente(ticket_id, incidente)
         
         if exito:
