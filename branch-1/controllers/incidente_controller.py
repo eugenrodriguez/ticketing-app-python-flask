@@ -48,24 +48,20 @@ class IncidenteController:
         }
     
     def obtener_incidente(self, incidente_id: int) -> Optional[Dict[str, Any]]:
-        """Obtiene los detalles de un incidente."""
         incidente = self.repo.obtener_por_id(incidente_id)
         if incidente:
             return incidente.to_dict()
         return None
     
     def listar_incidentes(self) -> List[Dict[str, Any]]:
-        """Lista todos los incidentes."""
         incidentes = self.repo.listar_todos()
         return [incidente.to_dict() for incidente in incidentes]
     
     def listar_incidentes_por_ticket(self, ticket_id: int) -> List[Dict[str, Any]]:
-        """Lista todos los incidentes de un ticket específico."""
         incidentes = self.repo.listar_por_ticket(ticket_id)
         return [incidente.to_dict() for incidente in incidentes]
     
     def eliminar_incidente(self, incidente_id: int) -> Dict[str, Any]:
-        """Elimina un incidente."""
         exito = self.repo.eliminar(incidente_id)
         if exito:
             return {
@@ -78,7 +74,6 @@ class IncidenteController:
         }
     
     def filtrar_por_categoria(self, categoria: str) -> List[Dict[str, Any]]:
-        """Filtra incidentes por categoría."""
         incidentes = self.repo.filtrar_por_categoria(categoria)
         return [incidente.to_dict() for incidente in incidentes]
     
